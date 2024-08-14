@@ -37,7 +37,7 @@ class MultiPostApi with HandlingExceptionRequest {
       for (var item in files.entries) {
         log('${item.key} ${item.value}');
         request.files.add(
-          await http.MultipartFile.fromPath(item.key, item.value,
+          http.MultipartFile.fromString(item.key, item.value,
               filename: item.value.split('/').last,
               contentType: MediaType('image', 'jpg')),
         );

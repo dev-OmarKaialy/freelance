@@ -10,4 +10,10 @@ class Profilerepo with HandlingExceptionManager {
       return Right(await Profiledatasource().update_service());
     });
   }
+
+  Future<Either<Failure, ProfileModel>> showProfile(int? id) async {
+    return wrapHandling(tryCall: () async {
+      return Right(await Profiledatasource().view_profile(id));
+    });
+  }
 }

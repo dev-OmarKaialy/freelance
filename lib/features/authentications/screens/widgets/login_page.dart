@@ -1,19 +1,25 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:project1company/features/authentications/controllers-onboarding/login_controller.dart';
 
 import '../../../../utils/costants/const.dart';
 import 'custombutton.dart';
 import 'customtextfield.dart';
 
-
-
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
   Widget build(BuildContext context) {
-    //final controller = Get.put(LoginController());
+    final controller = Get.put(LoginController());
+    final fullNameController = TextEditingController();
+    final email = TextEditingController();
+    final password = TextEditingController();
     //const Color kPrimaryColor= Color(0xff237AB3);
     // const Color KprimaryyColor= Color(0xff1F5E89);
     return Scaffold(
@@ -35,13 +41,13 @@ class LoginPage extends StatelessWidget {
               height: 10,
               width: 10,
             ),
-            const Padding(
-              padding: EdgeInsets.all(50),
+            Padding(
+              padding: const EdgeInsets.all(50),
               child: Image(
-                image: AssetImage(
+                image: const AssetImage(
                     'assets/images/onboarding-images/photo_2024-05-10_15-04-33.jpg'),
-                width: 700,
-                height: 700,
+                width: context.width * .2,
+                height: context.width * .2,
               ),
             ),
             const SizedBox(
@@ -74,6 +80,7 @@ class LoginPage extends StatelessWidget {
                       borderColor: kfirstColor,
                       width: 150,
                       hintText: 'Full Name',
+                      controller: fullNameController,
                       hintColor: ksecondColor,
                       hintSize: 15,
                       onTap: () {},
@@ -88,6 +95,7 @@ class LoginPage extends StatelessWidget {
                       hintText: 'Email',
                       hintColor: ksecondColor,
                       hintSize: 15,
+                      controller: email,
                       onTap: () {},
                     ),
                     const SizedBox(
@@ -96,6 +104,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     CustomTextField(
                       borderColor: kfirstColor,
+                      controller: password,
                       width: 150,
                       hintText: 'Password',
                       hintColor: ksecondColor,
@@ -111,7 +120,10 @@ class LoginPage extends StatelessWidget {
                       backgroundColor: kfirstColor,
                       borderColor: kfirstColor,
                       text: 'LOGIN',
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.login(
+                            {'email': email.text, 'password': password.text});
+                      },
                       icon: const Icon(Icons.send),
                       iconColor: kfirstColor,
                       textColor: Colors.white,

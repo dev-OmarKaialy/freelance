@@ -5,15 +5,15 @@ import 'package:project1company/data/company/register/company-data.dart';
 import 'package:project1company/data/customer/register/registermodel.dart';
 
 class CompanyRepo with HandlingExceptionManager {
-  Future<Either<Failure, RegisterModel>> postregister() async {
+  Future<Either<Failure, RegisterModel>> postregister(body) async {
     return wrapHandling(tryCall: () async {
-      return Right(await companydata().postregister());
+      return Right(await Companydata().postregister(body));
     });
   }
 
-  Future<Either<Failure, RegisterModel>> postlogin() async {
+  Future<Either<Failure, RegisterModel>> postlogin(body) async {
     return wrapHandling(tryCall: () async {
-      return Right(await companydata().postlogin());
+      return Right(await Companydata().postlogin(body));
     });
   }
 }

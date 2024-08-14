@@ -71,18 +71,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
 
-
+  uses-material-design: true
   # To add assets to your application, add an assets section, like this:
-   assets:
-     - assets/images/onboarding-images/on.2.png
-     - assets/images/onboarding-images/on.3.png
-     - assets/images/onboarding-images/on1.png
-     - assets/images/onboarding-images/ecedae225602e4280db2a3d0a941d0b0.png
-     - assets/images/onboarding-images/photo_2024-05-10_15-04-33.jpg
-     - assets/images/onboarding-images/photo_2024-05-10_15-04-33.jpg
-     - assets/images/onboarding-images/enhanced.png
-     - assets/images/onboarding-images/abf44701-f078-4dcf-b64f-1c4e88caee3f.png
-     - assets/images/onboarding-images/ed821872-1b8b-4923-b563-17d74474cc9e.png
+  assets:
+    - assets/images/onboarding-images/on.2.png
+    - assets/images/onboarding-images/on.3.png
+    - assets/images/onboarding-images/on1.png
+    - assets/images/onboarding-images/ecedae225602e4280db2a3d0a941d0b0.png
+    - assets/images/onboarding-images/photo_2024-05-10_15-04-33.jpg
+    - assets/images/onboarding-images/photo_2024-05-10_15-04-33.jpg
+    - assets/images/onboarding-images/enhanced.png
+    - assets/images/onboarding-images/abf44701-f078-4dcf-b64f-1c4e88caee3f.png
+    - assets/images/onboarding-images/ed821872-1b8b-4923-b563-17d74474cc9e.png
 
 
   #   - images/a_dot_burr.jpeg

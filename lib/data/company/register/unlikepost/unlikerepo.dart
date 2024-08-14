@@ -5,9 +5,15 @@ import 'package:project1company/data/company/register/unlikepost/unlikedatasourc
 import 'package:project1company/data/company/register/unlikepost/unlikemodel.dart';
 
 class Unlikerepo with HandlingExceptionManager {
-  Future<Either<Failure, UnLikePostModel>> unlike() async {
+  Future<Either<Failure, UnLikePostModel>> unlike(int id) async {
     return wrapHandling(tryCall: () async {
-      return Right(await Unlikedatasource().unlike());
+      return Right(await Unlikedatasource().unlike(id));
+    });
+  }
+
+  Future<Either<Failure, UnLikePostModel>> like(int id) async {
+    return wrapHandling(tryCall: () async {
+      return Right(await Unlikedatasource().like(id));
     });
   }
 }

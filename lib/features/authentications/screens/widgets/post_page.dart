@@ -1,6 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project1company/core/extensions/widget_extensions.dart';
+import 'package:project1company/core/utils/toaster.dart';
+import 'package:project1company/data/company/register/unlikepost/unlikerepo.dart';
+import 'package:project1company/data/customer/post/postRepo.dart';
+import 'package:project1company/features/authentications/screens/widgets/profile_show.dart';
 
 import '../../modules/post.dart';
 
@@ -9,17 +13,22 @@ class PostWidget extends StatefulWidget {
   final Function onDelete;
   final Function onReport;
 
-  PostWidget({required this.post, required this.onDelete, required this.onReport});
+  const PostWidget(
+      {super.key,
+      required this.post,
+      required this.onDelete,
+      required this.onReport});
 
   @override
   _PostWidgetState createState() => _PostWidgetState();
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  final ValueNotifier isLiked = ValueNotifier(false);
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -28,10 +37,14 @@ class _PostWidgetState extends State<PostWidget> {
             ListTile(
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(widget.post.authorProfilePicUrl),
-              ),
+              ).onTap(() {
+                Get.to(ProfileShow(
+                  id: widget.post.id,
+                ));
+              }),
               title: Text(widget.post.authorName),
               trailing: IconButton(
-                icon: Icon(Icons.report),
+                icon: const Icon(Icons.report),
                 onPressed: () {
                   widget.onReport(widget.post);
                 },
@@ -41,31 +54,47 @@ class _PostWidgetState extends State<PostWidget> {
             ButtonBar(
               alignment: MainAxisAlignment.start,
               children: [
+                ValueListenableBuilder(
+                    valueListenable: isLiked,
+                    builder: (context, value, _) {
+                      return TextButton.icon(
+                        icon: Icon(value
+                            ? Icons.thumb_up
+                            : Icons.thumb_up_off_alt_outlined),
+                        label: Text('${widget.post.likes}'),
+                        onPressed: () async {
+                          Toaster.showLoading();
+                          if (value) {
+                            isLiked.value = false;
+                            await Unlikerepo().like(widget.post.id);
+                          } else {
+                            isLiked.value = true;
+                            await Unlikerepo().unlike(widget.post.id);
+                          }
+                          setState(() {
+                            widget.post.likes =
+                                widget.post.likes + (value ? -1 : 1);
+                          });
+                          Toaster.closeLoading();
+                        },
+                      );
+                    }),
                 TextButton.icon(
-                  icon: Icon(Icons.thumb_up),
-                  label: Text('${widget.post.likes}'),
-                  onPressed: () {
-                    setState(() {
-                      widget.post.likes += 1;
-                    });
-                  },
-                ),
-                TextButton.icon(
-                  icon: Icon(Icons.comment),
+                  icon: const Icon(Icons.comment),
                   label: Text('${widget.post.comments.length}'),
                   onPressed: () {
                     _showCommentDialog(context);
                   },
                 ),
                 TextButton.icon(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   label: Text('edit'.tr),
                   onPressed: () {
                     _showEditPostDialog(context);
                   },
                 ),
                 TextButton.icon(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   label: Text('delete'.tr),
                   onPressed: () {
                     _showDeleteConfirmationDialog(context);
@@ -73,7 +102,9 @@ class _PostWidgetState extends State<PostWidget> {
                 ),
               ],
             ),
-            ...widget.post.comments.map((comment) => _buildComment(comment)).toList(),
+            ...widget.post.comments
+                .map((comment) => _buildComment(comment))
+                .toList(),
           ],
         ),
       ),
@@ -90,17 +121,18 @@ class _PostWidgetState extends State<PostWidget> {
             backgroundImage: NetworkImage(comment.authorProfilePicUrl),
             radius: 15,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(comment.authorName, style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(comment.authorName,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text(comment.content),
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.thumb_up, size: 20),
+                      icon: const Icon(Icons.thumb_up, size: 20),
                       onPressed: () {
                         setState(() {
                           comment.likes += 1;
@@ -109,13 +141,13 @@ class _PostWidgetState extends State<PostWidget> {
                     ),
                     Text('${comment.likes}'),
                     IconButton(
-                      icon: Icon(Icons.edit, size: 20),
+                      icon: const Icon(Icons.edit, size: 20),
                       onPressed: () {
                         _showEditCommentDialog(context, comment);
                       },
                     ),
                     IconButton(
-                      icon: Icon(Icons.delete, size: 20),
+                      icon: const Icon(Icons.delete, size: 20),
                       onPressed: () {
                         setState(() {
                           widget.post.comments.remove(comment);
@@ -133,14 +165,14 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void _showCommentDialog(BuildContext context) {
-    final TextEditingController _commentController = TextEditingController();
+    final TextEditingController commentController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('add_comment'.tr),
           content: TextField(
-            controller: _commentController,
+            controller: commentController,
             decoration: InputDecoration(hintText: 'enter_comment'.tr),
           ),
           actions: [
@@ -155,7 +187,7 @@ class _PostWidgetState extends State<PostWidget> {
                 setState(() {
                   widget.post.comments.add(Comment(
                     id: DateTime.now().toString(),
-                    content: _commentController.text,
+                    content: commentController.text,
                     authorName: 'current_user'.tr,
                     authorProfilePicUrl: 'https://example.com/profile.jpg',
                   ));
@@ -171,14 +203,15 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void _showEditPostDialog(BuildContext context) {
-    final TextEditingController _postController = TextEditingController(text: widget.post.content);
+    final TextEditingController postController =
+        TextEditingController(text: widget.post.content);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('edit_post'.tr),
           content: TextField(
-            controller: _postController,
+            controller: postController,
             decoration: InputDecoration(hintText: 'enter_new_content'.tr),
           ),
           actions: [
@@ -189,10 +222,20 @@ class _PostWidgetState extends State<PostWidget> {
               child: Text('cancel'.tr),
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  widget.post.content = _postController.text;
+              onPressed: () async {
+                final r = await Postrepo()
+                    .updatePost(postController.text, widget.post.id);
+                r.fold((l) {
+                  Toaster.closeLoading();
+                  Toaster.showToast(l.message);
+                }, (r) {
+                  Toaster.closeLoading();
+                  Toaster.showToast('Successfully Edited', isError: false);
+                  setState(() {
+                    widget.post.content = postController.text;
+                  });
                 });
+
                 Navigator.of(context).pop();
               },
               child: Text('save'.tr),
@@ -204,14 +247,15 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void _showEditCommentDialog(BuildContext context, Comment comment) {
-    final TextEditingController _commentController = TextEditingController(text: comment.content);
+    final TextEditingController commentController =
+        TextEditingController(text: comment.content);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('edit_comment'.tr),
           content: TextField(
-            controller: _commentController,
+            controller: commentController,
             decoration: InputDecoration(hintText: 'enter_new_content'.tr),
           ),
           actions: [
@@ -224,7 +268,7 @@ class _PostWidgetState extends State<PostWidget> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  comment.content = _commentController.text;
+                  comment.content = commentController.text;
                 });
                 Navigator.of(context).pop();
               },
@@ -263,4 +307,3 @@ class _PostWidgetState extends State<PostWidget> {
     );
   }
 }
-

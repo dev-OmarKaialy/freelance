@@ -5,9 +5,9 @@ import 'package:project1company/data/company/register/post/postdatasource.dart';
 import 'package:project1company/data/company/register/post/postmodel.dart';
 
 class Postrepo with HandlingExceptionManager {
-  Future<Either<Failure, PostModel>> Post() async {
+  Future<Either<Failure, PostModel>> Post(title, content, file) async {
     return wrapHandling(tryCall: () async {
-      return Right(await Postdatasource().Post());
+      return Right(await Postdatasource().addPost(title, content, file));
     });
   }
 }

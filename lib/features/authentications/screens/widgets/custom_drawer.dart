@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project1company/features/authentications/screens/widgets/chat_page.dart';
+import 'package:project1company/features/authentications/screens/widgets/logout_view.dart';
+import 'package:project1company/features/authentications/screens/widgets/profile_show.dart';
 
 import '../../../../utils/costants/const.dart';
 import 'homePage.dart';
 
-
 class CustomDrawer extends StatelessWidget {
   final TextStyle _textStyle = const TextStyle(color: kfirstColor);
   final Color _iconColor = kfirstColor;
+
+  const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +26,35 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.home, color: _iconColor),
             onTap: () {
-              Get.to(HomePage());
+              Get.to(const HomePage());
             },
             title: Text('Home page', style: _textStyle),
           ),
           Divider(color: _iconColor),
           ListTile(
             leading: Icon(Icons.person, color: _iconColor),
-            onTap: () {},
+            onTap: () {
+              Get.to(const ProfileShow());
+            },
             title: Text('Profile', style: _textStyle),
           ),
           Divider(color: _iconColor),
           ListTile(
             leading: Icon(Icons.contact_mail, color: _iconColor),
-            onTap: () {},
+            onTap: () {
+              Get.to(ChatScreen());
+            },
             title: Text('Contact', style: _textStyle),
           ),
           Divider(color: _iconColor),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              showAboutDialog(context: context, children: [
+                const Text("""
+You are accepting our terms and conditions when you uses this app
+""")
+              ]);
+            },
             leading: Icon(Icons.article, color: _iconColor),
             title: Text('Terms and conditions', style: _textStyle),
           ),
@@ -74,7 +88,7 @@ class CustomDrawer extends StatelessWidget {
             leading: Icon(Icons.group, color: _iconColor),
             title: const Text('Show Users'),
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             onTap: () {},
             leading: Icon(Icons.work, color: _iconColor),
@@ -82,7 +96,9 @@ class CustomDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Get.to(LogoutPage());
+            },
             leading: Icon(Icons.exit_to_app, color: _iconColor),
             title: Text('Log Out', style: _textStyle),
           ),

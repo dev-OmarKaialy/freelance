@@ -1,5 +1,8 @@
-
 import 'package:get/get.dart';
+import 'package:project1company/core/services/shared_preferences_service.dart';
+import 'package:project1company/core/utils/toaster.dart';
+import 'package:project1company/data/company/register/company_repo.dart';
+import 'package:project1company/main.dart';
 
 class LoginController extends GetxController {
   final _fullName = ''.obs;
@@ -28,8 +31,18 @@ class LoginController extends GetxController {
     _profilePhoto.value = value;
   }
 
-  void login() {
+  void login(body) async {
     // Call API to login
+    Toaster.showLoading();
+    final r = await CompanyRepo().postlogin(body);
+    r.fold((l) {
+      Toaster.showToast(l.message);
+    }, (r) async {
+      await SharedPreferencesService.setToken(r.authToken ?? '');
+      Get.to(const MainScreen());
+    });
+    Toaster.closeLoading();
+
     print('Login successful!');
   }
 }

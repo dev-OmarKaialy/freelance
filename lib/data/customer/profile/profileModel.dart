@@ -10,25 +10,51 @@ ProfileModel profileModelFromJson(String str) =>
 String profileModelToJson(ProfileModel data) => json.encode(data.toJson());
 
 class ProfileModel {
-  final bool status;
-  final String message;
-  final int statusNumber;
+  final Data? data;
 
   ProfileModel({
-    required this.status,
-    required this.message,
-    required this.statusNumber,
+    this.data,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
-        status: json["status"],
-        message: json["message"],
-        statusNumber: json["statusNumber"],
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-        "message": message,
-        "statusNumber": statusNumber,
+        "data": data?.toJson(),
+      };
+}
+
+class Data {
+  final int? id;
+  final String? name;
+  final String? email;
+  final String? photo;
+  final List<dynamic>? posts;
+
+  Data({
+    this.id,
+    this.name,
+    this.email,
+    this.photo,
+    this.posts,
+  });
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+        id: json["id"],
+        name: json["name"],
+        email: json["email"],
+        photo: json["photo"],
+        posts: json["posts"] == null
+            ? []
+            : List<dynamic>.from(json["posts"]!.map((x) => x)),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "email": email,
+        "photo": photo,
+        "posts": posts == null ? [] : List<dynamic>.from(posts!.map((x) => x)),
       };
 }
