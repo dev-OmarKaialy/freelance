@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import '../extensions/log_colors_extension.dart';
+import '../services/shared_preferences_service.dart';
 
 class ApiVariables {
   /////////////
@@ -46,18 +47,33 @@ class ApiVariables {
   //Uri profile() => _companyUri(path: 'profile');
   //Uri shopCategories() => _companyUri(path: 'shopCategories');
   //Uri shops() => _companyUri(path: 'shops');
-  Uri login() => _customerUri(path: 'login');
-  Uri register() => _companyUri(path: 'register');
-  Uri Addoffer() => _companyUri(path: 'add-offer');
-  Uri add_link_to_post() => _companyUri(path: 'addLikeToPost');
-  Uri updatePost(int id) => _customerUri(path: 'updatePost/$id');
-  Uri Post_1() => _customerUri(path: 'post');
-  Uri Unlike() => _companyUri(path: 'unlikePost');
-  Uri login_c() => _customerUri(path: 'path');
-  Uri register_c() => _customerUri(path: 'register');
-  Uri Post() => _customerUri(path: 'post');
-  Uri addservice() => _customerUri(path: 'service');
-  Uri deleteservice(String id) => _customerUri(path: 'deleteService/$id');
+  Uri login() => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'login')
+      : _customerUri(path: 'login');
+  Uri register() => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'register')
+      : _customerUri(path: 'register');
+  Uri Addoffer() => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'add-offer')
+      : _customerUri(path: 'add-offer');
+  Uri add_link_to_post() => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'addLikeToPost')
+      : _customerUri(path: 'addLikeToPost');
+  Uri updatePost(int id) => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'addLikeToPost')
+      : _customerUri(path: 'updatePost/$id');
+  Uri Post_1() => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'addLikeToPost')
+      : _customerUri(path: 'post');
+  Uri Unlike() => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'addLikeToPost')
+      : _companyUri(path: 'unlikePost');
+  Uri addservice() => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'addLikeToPost')
+      : _customerUri(path: 'service');
+  Uri deleteservice(String id) => SharedPreferencesService.isCompany()
+      ? _companyUri(path: 'addLikeToPost')
+      : _customerUri(path: 'deleteService/$id');
   Uri viewprofile(String id) => _customerUri(path: 'viewProfile/Customer/$id');
   Uri updateprofile() => _customerUri(path: 'updateProfile/');
   Uri search() => _customerUri(path: 'search');

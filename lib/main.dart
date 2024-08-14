@@ -46,7 +46,9 @@ class MyApp extends StatelessWidget {
           themeMode: settingsController.selectedTheme == "Light"
               ? ThemeMode.light
               : ThemeMode.dark,
-          home: const LoginPage(),
+          home: SharedPreferencesService.getToken() != null
+              ? const MainScreen()
+              : const LoginPage(),
 
           /*  PostWidget(
             post: Post(

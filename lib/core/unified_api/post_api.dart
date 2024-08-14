@@ -45,7 +45,8 @@ class PostApi<T> with HandlingExceptionRequest {
       http.Response response = await http.Response.fromStream(streamedResponse);
       log(response.body.logCyan);
       log(response.statusCode.toString().logGreen);
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (jsonDecode(response.body)['statusNumber'] == 200 ||
+          jsonDecode(response.body)['statusNumber'] == 201) {
         return fromJson(response.body);
       } else {
         Exception exception = getException(response: response);

@@ -40,7 +40,8 @@ class GetApi<T> with HandlingExceptionRequest {
           await request.send().timeout(const Duration(seconds: 20));
       http.Response response = await http.Response.fromStream(streamedResponse);
       log(response.body.logGreen);
-      if (response.statusCode == 200) {
+      if (jsonDecode(response.body)['statusNumber'] == 200 ||
+          jsonDecode(response.body)['statusNumber'] == 201) {
         return fromJson(response.body);
       } else {
         Exception exception = getException(response: response);

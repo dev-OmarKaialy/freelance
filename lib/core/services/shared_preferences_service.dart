@@ -18,11 +18,11 @@ class SharedPreferencesService {
     return sp.getString('token');
   }
 
-  static Future<void> setFirstTime() async {
-    await sp.setBool('first', false);
+  static Future<void> setRole(bool isCompany) async {
+    await sp.setBool('first', isCompany);
   }
 
-  static bool? getFirstTime() {
-    return sp.getBool('first');
+  static bool isCompany() {
+    return sp.getBool('first') ?? false;
   }
 }
